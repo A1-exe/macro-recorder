@@ -1,0 +1,38 @@
+import { Button, VerticalBox } from "std-widgets.slint";
+
+export component AppWindow inherits Window {
+  title: "Realtime Macro Recorder";
+  always-on-top: true;
+  width: 350px;
+  height: 200px;
+
+  in-out property <string> wtitle <=> root.title;
+
+  callback play-pause();
+  callback record();
+  callback stop();
+
+  VerticalBox {
+    Button {
+      text: "Play/Pause (F1)";
+      clicked => {
+        root.title = "play";
+        root.play-pause();
+      }
+    }
+    Button {
+      text: "Record (F2)";
+      clicked => {
+        root.title = "rec";
+        root.record();
+      }
+    }
+    Button {
+      text: "Stop (F3)";
+      clicked => {
+        root.title = "stop";
+        root.stop();
+      }
+    }
+  }
+}

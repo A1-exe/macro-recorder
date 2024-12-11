@@ -1,6 +1,5 @@
 use enigo::{
-  Button, Coordinate,
-  Direction::{Click, Press, Release},
+  Button, Coordinate, Direction, Axis,
   Enigo, Key, Keyboard, Mouse, Settings,
 };
 use rdev::{listen, Event, EventType, Key as RdevKey};
@@ -273,45 +272,44 @@ fn start_playback(s: Arc<Mutex<SharedState>>) {
         
         match evt.event_type {
           EventType::MouseMove { x, y } => {
-            enigo.move_mouse(x as i32, y as i32, enigo::Coordinate::Abs);
+            enigo.move_mouse(x as i32, y as i32, Coordinate::Abs).unwrap();
           }
           EventType::ButtonPress(button) => {
             match button {
-              rdev::Button::Left => enigo.button(enigo::Button::Left, enigo::Direction::Press),
-              rdev::Button::Right => enigo.button(enigo::Button::Right, enigo::Direction::Press),
-              rdev::Button::Middle => enigo.button(enigo::Button::Middle, enigo::Direction::Press),
-              _ => Ok(())
+              rdev::Button::Left => enigo.button(Button::Left, Direction::Press).unwrap(),
+              rdev::Button::Right => enigo.button(Button::Right, Direction::Press).unwrap(),
+              rdev::Button::Middle => enigo.button(Button::Middle, Direction::Press).unwrap(),
+              _ => ()
             };
           }
           EventType::ButtonRelease(button) => {
             match button {
-              rdev::Button::Left => enigo.button(enigo::Button::Left, enigo::Direction::Release),
-              rdev::Button::Right => enigo.button(enigo::Button::Right, enigo::Direction::Release),
-              rdev::Button::Middle => enigo.button(enigo::Button::Middle, enigo::Direction::Release),
-              _ => Ok(())
+              rdev::Button::Left => enigo.button(Button::Left, Direction::Release).unwrap(),
+              rdev::Button::Right => enigo.button(Button::Right, Direction::Release).unwrap(),
+              rdev::Button::Middle => enigo.button(Button::Middle, Direction::Release).unwrap(),
+              _ => ()
             };
           }
           EventType::Wheel { delta_x, delta_y } => {
             let lines_y = delta_y as i32;
             let lines_x = delta_x as i32;
             if lines_y != 0 {
-              enigo.scroll(lines_y, enigo::Axis::Vertical);
+              enigo.scroll(lines_y, Axis::Vertical).unwrap();
             }
             if lines_x != 0 {
-              enigo.scroll(lines_x, enigo::Axis::Horizontal);
+              enigo.scroll(lines_x, Axis::Horizontal).unwrap();
             }
           }
           EventType::KeyPress(key) => {
             if let Some(enigo_key) = rdev_key_to_enigo_key(key) {
-              enigo.key(enigo_key, enigo::Direction::Press);
+              enigo.key(enigo_key, Direction::Press).unwrap();
             }
           }
           EventType::KeyRelease(key) => {
             if let Some(enigo_key) = rdev_key_to_enigo_key(key) {
-              enigo.key(enigo_key, enigo::Direction::Release);
+              enigo.key(enigo_key, Direction::Release).unwrap();
             }
           }
-          _ => {}
         }
       }
       
